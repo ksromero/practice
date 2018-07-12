@@ -12,16 +12,16 @@ class BusinessController extends Controller
     //If no search query is available show the business collection else show the business collection filtered by query
     public function index(Request $request)
     {
-        $business = Business::orderBy('created_at', 'desc')->paginate(5);
-        $businessCollection = BusinessResource::collection($business);
+        $errorFound = false;
+        $error = ['error' => 'No Results Found'];
+        $business = Business::orderBy('created_at', 'desc');
         if (request()->has('q')) {
             $keyword = '%'.request()->get('q').'%';
             $builder = Business::orderBy('created_at', 'desc');
-            $builder = $builder->where('businessName', 'like', $keyword)->paginate(5);
-            $builderCollection = BusinessResource::collection($builder);
-            return $builderCollection->count() ? $builderCollection : $businessCollection;
+            $builder = $builder->where('businessName', 'like', $keyword);
+            $builder->count() ? $business = $builder : $errorFound = true;
         }
-        return $businessCollection;
+       return $errorFound === false ? BusinessResource::collection($business->paginate(5)) : $error;
     }
     public function store(Request $request)
     {

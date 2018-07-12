@@ -6,6 +6,9 @@
          <input type="text" class="form-control" v-on:input="fetchBusiness()" v-model="search" style="margin-top:15px;" placeholder="Search">
         <i class="glyphicon glyphicon-search form-control-feedback"></i>
     </div>
+    <div v-if="Object.keys(noResult).length > 0">
+        <span class="alert-danger">No Results Found</span>
+    </div>
       <form @submit.prevent="addBusiness">
         <modal v-model="openModal1" title="Modal Title" size="lg" :dismiss-btn="false">
             <div class="form-group">
@@ -103,6 +106,7 @@ axios.defaults.baseURL = 'http://localhost/acc/public/';
     data () {
       return {
         businesses: [],
+        noResult: {},
         business: {
             id: '',
             businessAddress: '',
@@ -133,18 +137,19 @@ axios.defaults.baseURL = 'http://localhost/acc/public/';
             }
             this.errors.clear();
         },
-       fetchBusiness: function(page_url)
+       fetchBusiness: async function(page_url)
         {
             let vm = this;
             page_url = page_url || 'api/businesses?q=' + vm.search
-            axios.get(page_url)
-            .then(function (response) {
-                vm.businesses = response.data.data;
-                vm.makePagination(response.data.meta, response.data.links);
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
+            try {
+                 let response = await axios.get(page_url)
+                 response.data.error ? vm.noResult = response.data.error : vm.noResult = '';
+                 vm.businesses = response.data.data;
+                 vm.makePagination(response.data.meta, response.data.links);
+            }catch(err)
+            {
+                console.log(err)
+            }
         },
         makePagination: function(meta, links)
         {
