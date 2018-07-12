@@ -101,7 +101,7 @@ class Errors
         this.errors = {};
     }
 }
-axios.defaults.baseURL = 'http://localhost/acc/public/';
+axios.defaults.baseURL = 'http://localhost/practice/public/';
   export default {
     data () {
       return {
