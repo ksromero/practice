@@ -9,7 +9,7 @@ use App\Http\Resources\BusinessResource;
 
 class BusinessController extends Controller
 {
-    //If no search query is available show the business collection else show the business collection filtered by query
+    //If no search query is available show the error not found else show the business collection filtered by query
     public function index(Request $request)
     {
         $errorFound = false;
