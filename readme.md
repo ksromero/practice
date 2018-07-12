@@ -1,3 +1,1 @@
-- basic crud using resource and vue js
-- used faker for generating fake data
-- adminlte plugin for laravel
+Basic crud w/ search and pagination using vue js and laravel
